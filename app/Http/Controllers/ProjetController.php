@@ -22,26 +22,92 @@ class ProjetController extends Controller
     {
         $query = Projet::with('client', 'responsable');
 
-        // Apply filters
+        // Filtre par année
         if ($request->filled('year')) {
-            $query->whereYear('date_debut', $request->year);
+            $query->whereYear('created_at', $request->year);
         }
 
-        if ($request->filled('client_name')) {
-            $clientName = $request->client_name;
-            $query->whereHas('client', function ($q) use ($clientName) {
-                $q->where('nom', 'like', '%' . $clientName . '%')
-                  ->orWhere('prenom', 'like', '%' . $clientName . '%')
-                  ->orWhere('societe', 'like', '%' . $clientName . '%');
+        // Filtre par statut
+        if ($request->filled('status')) {
+            $query->where('etat', $request->status);
+        }
+
+        // Filtre par client
+        if ($request->filled('client_id')) {
+            $query->where('client_id', $request->client_id);
+        }
+
+        // Filtre par responsable
+        if ($request->filled('responsable_id')) {
+            $query->where('responsable_id', $request->responsable_id);
+        }
+
+        // Filtre par budget minimum
+        if ($request->filled('budget_min')) {
+            $query->where('budget_prevu', '>=', $request->budget_min);
+        }
+
+        // Filtre par budget maximum
+        if ($request->filled('budget_max')) {
+            $query->where('budget_prevu', '<=', $request->budget_max);
+        }
+
+        // Filtre par date de début
+        if ($request->filled('date_debut')) {
+            $query->where('date_debut', '>=', $request->date_debut);
+        }
+
+        // Filtre par date de fin
+        if ($request->filled('date_fin')) {
+            $query->where('date_fin', '<=', $request->date_fin);
+        }
+
+        // Filtre par priorité (si le champ existe)
+        if ($request->filled('priorite') && $this->hasColumn('projets', 'priorite')) {
+            $query->where('priorite', $request->priorite);
+        }
+
+        // Filtre par type de projet (si le champ existe)
+        if ($request->filled('type') && $this->hasColumn('projets', 'type')) {
+            $query->where('type', $request->type);
+        }
+
+        // Recherche globale (si fournie)
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('titre', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('description', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('id', 'like', '%' . $searchTerm . '%')
+                  ->orWhereHas('client', function ($clientQuery) use ($searchTerm) {
+                      $clientQuery->where('nom', 'like', '%' . $searchTerm . '%')
+                                 ->orWhere('prenom', 'like', '%' . $searchTerm . '%')
+                                 ->orWhere('societe', 'like', '%' . $searchTerm . '%');
+                  })
+                  ->orWhereHas('responsable', function ($respQuery) use ($searchTerm) {
+                      $respQuery->where('nom', 'like', '%' . $searchTerm . '%')
+                               ->orWhere('prenom', 'like', '%' . $searchTerm . '%');
+                  });
             });
         }
 
-        $projets = $query->latest()->paginate(10);
+        $projets = $query->latest()->paginate(15);
 
-        // Pass filter values back to the view
-        $filters = $request->only('year', 'client_name');
+        // Récupérer les listes pour les filtres
+        $clients = Client::orderBy('societe')->get();
+        $responsables = User::orderBy('prenom')->get();
 
-        return view('projets.index', compact('projets', 'filters'));
+        // Statistiques des projets
+        $stats = [
+            'total' => Projet::count(),
+            'en_attente' => Projet::where('etat', 'en_attente')->count(),
+            'en_cours' => Projet::where('etat', 'en_cours')->count(),
+            'termine' => Projet::where('etat', 'termine')->count(),
+            'suspendu' => Projet::where('etat', 'suspendu')->count(),
+            'planifie' => Projet::where('etat', 'planifie')->count(),
+        ];
+
+        return view('projets.index', compact('projets', 'clients', 'responsables', 'stats'));
     }
 
     public function create()
@@ -109,5 +175,13 @@ class ProjetController extends Controller
     {
         $projet->delete();
         return redirect()->route('projets.index')->with('success', 'Projet supprimé avec succès.');
+    }
+
+    /**
+     * Vérifie si une colonne existe dans une table
+     */
+    private function hasColumn($table, $column)
+    {
+        return \Schema::hasColumn($table, $column);
     }
 }

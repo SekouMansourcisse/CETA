@@ -26,60 +26,232 @@
         </div>
     @endif
 
-    <!-- Filtres et contrôles -->
+    <!-- Filtres Avancés et Recherche -->
     <div class="card mb-3">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="fas fa-filter me-2"></i>Filtres Avancés et Recherche
+            </h5>
+        </div>
         <div class="card-body">
-            <form action="{{ route('projets.index') }}" method="GET" class="mb-3">
-                <div class="row align-items-center">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="yearFilter">Année :</label>
-                            <input type="number" name="year" id="yearFilter" class="form-control" value="{{ request('year') }}" placeholder="Ex: 2023">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="clientNameFilter">Nom du client :</label>
-                            <input type="text" name="client_name" id="clientNameFilter" class="form-control" value="{{ request('client_name') }}" placeholder="Nom du client">
-                        </div>
-                    </div>
-                    <div class="col-md-4 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary me-2">Filtrer</button>
-                        <a href="{{ route('projets.index') }}" class="btn btn-secondary">Réinitialiser</a>
-                    </div>
-                </div>
-            </form>
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="d-flex align-items-center">
-                        <label class="me-2">Filtrer par statut:</label>
-                        <select id="statusFilter" class="form-select" style="width: auto;">
-                            <option value="all">Tous</option>
-                            <option value="en_attente">En attente</option>
-                            <option value="en_cours">En cours</option>
-                            <option value="termine">Terminé</option>
-                            <option value="suspendu">Suspendu</option>
-                            <option value="planifie">Planifié</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-6 text-end">
-                    <div class="d-flex justify-content-end align-items-center">
-                        <span class="me-2 text-muted">Total: {{ $projets->count() }} projets</span>
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-secondary btn-sm active" id="gridView">
-                                <i class="fas fa-th"></i>
-                            </button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm" id="listView">
-                                <i class="fas fa-list"></i>
-                            </button>
+            <!-- Barre de recherche principale -->
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="search-wrapper position-relative">
+                        <i class="fas fa-search position-absolute start-0 top-50 translate-middle-y ms-3 text-muted"></i>
+                        <input type="text" id="globalSearch" class="form-control form-control-lg ps-5" 
+                               placeholder="🔍 Rechercher un projet par titre, client, description, numéro...">
+                        <div class="search-suggestions position-absolute w-100 bg-white border rounded shadow-sm d-none" 
+                             style="top: 100%; z-index: 1000; max-height: 300px; overflow-y: auto;">
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Filtres principaux -->
+            <form action="{{ route('projets.index') }}" method="GET" id="filterForm">
+                <div class="row g-3 mb-3">
+                    <!-- Filtre par année -->
+                    <div class="col-md-3">
+                        <label for="yearFilter" class="form-label fw-bold">
+                            <i class="fas fa-calendar me-1"></i>Année
+                        </label>
+                        <select name="year" id="yearFilter" class="form-select">
+                            <option value="">Toutes les années</option>
+                            @for($year = date('Y'); $year >= 2020; $year--)
+                                <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
+                                    {{ $year }}
+                                </option>
+                            @endfor
+                        </select>
+                    </div>
+
+                    <!-- Filtre par statut -->
+                    <div class="col-md-3">
+                        <label for="statusFilter" class="form-label fw-bold">
+                            <i class="fas fa-tasks me-1"></i>Statut
+                        </label>
+                        <select name="status" id="statusFilter" class="form-select">
+                            <option value="">Tous les statuts</option>
+                            <option value="en_attente" {{ request('status') == 'en_attente' ? 'selected' : '' }}>
+                                En attente
+                            </option>
+                            <option value="en_cours" {{ request('status') == 'en_cours' ? 'selected' : '' }}>
+                                En cours
+                            </option>
+                            <option value="termine" {{ request('status') == 'termine' ? 'selected' : '' }}>
+                                Terminé
+                            </option>
+                            <option value="suspendu" {{ request('status') == 'suspendu' ? 'selected' : '' }}>
+                                Suspendu
+                            </option>
+                            <option value="planifie" {{ request('status') == 'planifie' ? 'selected' : '' }}>
+                                Planifié
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Filtre par client -->
+                    <div class="col-md-3">
+                        <label for="clientFilter" class="form-label fw-bold">
+                            <i class="fas fa-user me-1"></i>Client
+                        </label>
+                        <select name="client_id" id="clientFilter" class="form-select">
+                            <option value="">Tous les clients</option>
+                            @foreach($clients ?? [] as $client)
+                                <option value="{{ $client->id }}" {{ request('client_id') == $client->id ? 'selected' : '' }}>
+                                    {{ $client->societe ?? $client->prenom . ' ' . $client->nom }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Filtre par responsable -->
+                    <div class="col-md-3">
+                        <label for="responsableFilter" class="form-label fw-bold">
+                            <i class="fas fa-user-tie me-1"></i>Responsable
+                        </label>
+                        <select name="responsable_id" id="responsableFilter" class="form-select">
+                            <option value="">Tous les responsables</option>
+                            @foreach($responsables ?? [] as $responsable)
+                                <option value="{{ $responsable->id }}" {{ request('responsable_id') == $responsable->id ? 'selected' : '' }}>
+                                    {{ $responsable->prenom . ' ' . $responsable->nom }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Filtres avancés (dépliables) -->
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="toggleAdvancedFilters">
+                            <i class="fas fa-cog me-1"></i>Filtres Avancés
+                            <i class="fas fa-chevron-down ms-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3" id="advancedFilters" style="display: none;">
+                    <!-- Filtre par budget -->
+                    <div class="col-md-3">
+                        <label for="budgetMin" class="form-label fw-bold">
+                            <i class="fas fa-euro-sign me-1"></i>Budget Min
+                        </label>
+                        <input type="number" name="budget_min" id="budgetMin" class="form-control" 
+                               placeholder="0" value="{{ request('budget_min') }}">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="budgetMax" class="form-label fw-bold">
+                            <i class="fas fa-euro-sign me-1"></i>Budget Max
+                        </label>
+                        <input type="number" name="budget_max" id="budgetMax" class="form-control" 
+                               placeholder="∞" value="{{ request('budget_max') }}">
+                    </div>
+
+                    <!-- Filtre par date -->
+                    <div class="col-md-3">
+                        <label for="dateDebut" class="form-label fw-bold">
+                            <i class="fas fa-calendar-plus me-1"></i>Date Début
+                        </label>
+                        <input type="date" name="date_debut" id="dateDebut" class="form-control" 
+                               value="{{ request('date_debut') }}">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="dateFin" class="form-label fw-bold">
+                            <i class="fas fa-calendar-minus me-1"></i>Date Fin
+                        </label>
+                        <input type="date" name="date_fin" id="dateFin" class="form-control" 
+                               value="{{ request('date_fin') }}">
+                    </div>
+
+                    <!-- Filtre par priorité -->
+                    <div class="col-md-3">
+                        <label for="prioriteFilter" class="form-label fw-bold">
+                            <i class="fas fa-exclamation-triangle me-1"></i>Priorité
+                        </label>
+                        <select name="priorite" id="prioriteFilter" class="form-select">
+                            <option value="">Toutes les priorités</option>
+                            <option value="basse" {{ request('priorite') == 'basse' ? 'selected' : '' }}>Basse</option>
+                            <option value="normale" {{ request('priorite') == 'normale' ? 'selected' : '' }}>Normale</option>
+                            <option value="haute" {{ request('priorite') == 'haute' ? 'selected' : '' }}>Haute</option>
+                            <option value="urgente" {{ request('priorite') == 'urgente' ? 'selected' : '' }}>Urgente</option>
+                        </select>
+                    </div>
+
+                    <!-- Filtre par type de projet -->
+                    <div class="col-md-3">
+                        <label for="typeFilter" class="form-label fw-bold">
+                            <i class="fas fa-tag me-1"></i>Type de Projet
+                        </label>
+                        <select name="type" id="typeFilter" class="form-select">
+                            <option value="">Tous les types</option>
+                            <option value="residentiel" {{ request('type') == 'residentiel' ? 'selected' : '' }}>Résidentiel</option>
+                            <option value="commercial" {{ request('type') == 'commercial' ? 'selected' : '' }}>Commercial</option>
+                            <option value="industriel" {{ request('type') == 'industriel' ? 'selected' : '' }}>Industriel</option>
+                            <option value="infrastructure" {{ request('type') == 'infrastructure' ? 'selected' : '' }}>Infrastructure</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Boutons d'action -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary me-2">
+                            <i class="fas fa-search me-1"></i>Appliquer les Filtres
+                        </button>
+                        <a href="{{ route('projets.index') }}" class="btn btn-secondary me-2">
+                            <i class="fas fa-undo me-1"></i>Réinitialiser
+                        </a>
+                        <button type="button" class="btn btn-outline-info btn-sm" id="saveFilters">
+                            <i class="fas fa-save me-1"></i>Sauvegarder
+                        </button>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <div class="d-flex justify-content-end align-items-center">
+                            <span class="me-3 text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                <span id="resultCount">{{ $projets->count() }}</span> projets trouvés
+                            </span>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-secondary btn-sm active" id="gridView" title="Vue Grille">
+                                    <i class="fas fa-th"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="listView" title="Vue Liste">
+                                    <i class="fas fa-list"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
+    <!-- Tags de filtres actifs -->
+    @if(request()->hasAny(['year', 'status', 'client_id', 'responsable_id', 'budget_min', 'budget_max', 'date_debut', 'date_fin', 'priorite', 'type']))
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="d-flex align-items-center flex-wrap gap-2">
+                <span class="text-muted me-2">Filtres actifs :</span>
+                @foreach(request()->all() as $key => $value)
+                    @if($value && !in_array($key, ['_token', 'page']))
+                        <span class="badge bg-primary d-flex align-items-center">
+                            {{ ucfirst(str_replace('_', ' ', $key)) }}: {{ $value }}
+                            <a href="{{ request()->except([$key, 'page']) }}" class="text-white ms-2 text-decoration-none">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        </span>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- Liste des Projets -->
     <div class="card">
         <div class="card-body">
             <div class="file-manager-content w-100 p-3 py-0">
@@ -98,7 +270,12 @@
                         <!-- Vue en grille -->
                         <div class="row" id="folderlist-data">
                             @forelse ($projets as $projet)
-                                <div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 folder-card etat-{{ $projet->etat }}" data-status="{{ $projet->etat }}">
+                                <div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 folder-card etat-{{ $projet->etat }}" 
+                                     data-status="{{ $projet->etat }}"
+                                     data-client="{{ strtolower($projet->client->societe ?? $projet->client->prenom . ' ' . $projet->client->nom) }}"
+                                     data-responsable="{{ strtolower($projet->responsable->prenom . ' ' . $projet->responsable->nom) }}"
+                                     data-year="{{ $projet->created_at->format('Y') }}"
+                                     data-budget="{{ $projet->budget_prevu ?? 0 }}">
                                     <div class="card project-card shadow-sm border-0 h-100" id="folder-{{ $projet->id }}">
                                         <div class="card-body position-relative">
                                             @php
@@ -141,6 +318,18 @@
                                                     <small class="text-muted">Client:</small>
                                                     <small class="fw-bold">
                                                         {{ Str::limit($projet->client->societe ?? $projet->client->prenom . ' ' . $projet->client->nom, 15) }}
+                                                    </small>
+                                                </div>
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <small class="text-muted">Responsable:</small>
+                                                    <small class="fw-bold">
+                                                        {{ Str::limit($projet->responsable->prenom . ' ' . $projet->responsable->nom, 15) }}
+                                                    </small>
+                                                </div>
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <small class="text-muted">Budget:</small>
+                                                    <small class="fw-bold text-primary">
+                                                        {{ number_format($projet->budget_prevu ?? 0, 0, ',', ' ') }} €
                                                     </small>
                                                 </div>
                                                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -256,6 +445,30 @@
             pointer-events: none;
         }
         
+        /* Styles pour les filtres avancés */
+        .search-wrapper {
+            position: relative;
+        }
+        
+        .search-suggestions {
+            border: 1px solid #dee2e6;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-suggestion-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #f8f9fa;
+        }
+        
+        .search-suggestion-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .search-suggestion-item:last-child {
+            border-bottom: none;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .project-details {
@@ -265,6 +478,10 @@
             .project-actions .btn {
                 padding: 4px 8px;
                 font-size: 0.8rem;
+            }
+            
+            .card-header h5 {
+                font-size: 1rem;
             }
         }
     </style>
@@ -278,16 +495,184 @@
             cards.forEach(card => {
                 const cardStatus = card.getAttribute('data-status');
                 
-                if (selectedStatus === 'all' || cardStatus === selectedStatus) {
+                if (selectedStatus === '' || cardStatus === selectedStatus) {
                     card.classList.remove('hide');
                 } else {
                     card.classList.add('hide');
                 }
             });
+            
+            updateResultCount();
         });
         
-        // Animation d'entrée des cartes
+        // Recherche globale en temps réel
+        let searchTimeout;
+        document.getElementById('globalSearch').addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            const searchTerm = this.value.toLowerCase();
+            
+            searchTimeout = setTimeout(() => {
+                const cards = document.querySelectorAll('.folder-card');
+                let visibleCount = 0;
+                
+                cards.forEach(card => {
+                    const title = card.querySelector('.project-title').textContent.toLowerCase();
+                    const subtitle = card.querySelector('.project-subtitle').textContent.toLowerCase();
+                    const client = card.getAttribute('data-client');
+                    const responsable = card.getAttribute('data-responsable');
+                    const year = card.getAttribute('data-year');
+                    
+                    const isVisible = title.includes(searchTerm) || 
+                                    subtitle.includes(searchTerm) || 
+                                    client.includes(searchTerm) || 
+                                    responsable.includes(searchTerm) || 
+                                    year.includes(searchTerm);
+                    
+                    if (isVisible) {
+                        card.classList.remove('hide');
+                        visibleCount++;
+                    } else {
+                        card.classList.add('hide');
+                    }
+                });
+                
+                updateResultCount(visibleCount);
+            }, 300);
+        });
+        
+        // Filtres avancés
+        document.getElementById('toggleAdvancedFilters').addEventListener('click', function() {
+            const advancedFilters = document.getElementById('advancedFilters');
+            const icon = this.querySelector('.fa-chevron-down');
+            
+            if (advancedFilters.style.display === 'none') {
+                advancedFilters.style.display = 'block';
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                advancedFilters.style.display = 'none';
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        });
+        
+        // Filtrage en temps réel pour les autres filtres
+        ['yearFilter', 'clientFilter', 'responsableFilter', 'budgetMin', 'budgetMax', 'dateDebut', 'dateFin', 'prioriteFilter', 'typeFilter'].forEach(filterId => {
+            const element = document.getElementById(filterId);
+            if (element) {
+                element.addEventListener('change', applyFilters);
+            }
+        });
+        
+        // Application des filtres
+        function applyFilters() {
+            const year = document.getElementById('yearFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const client = document.getElementById('clientFilter').value;
+            const responsable = document.getElementById('responsableFilter').value;
+            const budgetMin = document.getElementById('budgetMin').value;
+            const budgetMax = document.getElementById('budgetMax').value;
+            const dateDebut = document.getElementById('dateDebut').value;
+            const dateFin = document.getElementById('dateFin').value;
+            const priorite = document.getElementById('prioriteFilter').value;
+            const type = document.getElementById('typeFilter').value;
+            
+            const cards = document.querySelectorAll('.folder-card');
+            let visibleCount = 0;
+            
+            cards.forEach(card => {
+                let isVisible = true;
+                
+                // Filtre par année
+                if (year && card.getAttribute('data-year') !== year) {
+                    isVisible = false;
+                }
+                
+                // Filtre par statut
+                if (status && card.getAttribute('data-status') !== status) {
+                    isVisible = false;
+                }
+                
+                // Filtre par budget
+                const budget = parseInt(card.getAttribute('data-budget'));
+                if (budgetMin && budget < parseInt(budgetMin)) {
+                    isVisible = false;
+                }
+                if (budgetMax && budget > parseInt(budgetMax)) {
+                    isVisible = false;
+                }
+                
+                if (isVisible) {
+                    card.classList.remove('hide');
+                    visibleCount++;
+                } else {
+                    card.classList.add('hide');
+                }
+            });
+            
+            updateResultCount(visibleCount);
+        }
+        
+        // Mise à jour du compteur de résultats
+        function updateResultCount(count = null) {
+            const resultCount = document.getElementById('resultCount');
+            if (count !== null) {
+                resultCount.textContent = count;
+            } else {
+                const visibleCards = document.querySelectorAll('.folder-card:not(.hide)');
+                resultCount.textContent = visibleCards.length;
+            }
+        }
+        
+        // Sauvegarde des filtres
+        document.getElementById('saveFilters').addEventListener('click', function() {
+            const filters = {
+                year: document.getElementById('yearFilter').value,
+                status: document.getElementById('statusFilter').value,
+                client_id: document.getElementById('clientFilter').value,
+                responsable_id: document.getElementById('responsableFilter').value,
+                budget_min: document.getElementById('budgetMin').value,
+                budget_max: document.getElementById('budgetMax').value,
+                date_debut: document.getElementById('dateDebut').value,
+                date_fin: document.getElementById('dateFin').value,
+                priorite: document.getElementById('prioriteFilter').value,
+                type: document.getElementById('typeFilter').value
+            };
+            
+            localStorage.setItem('projets_filters', JSON.stringify(filters));
+            
+            // Notification de succès
+            const btn = this;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check me-1"></i>Sauvegardé !';
+            btn.classList.remove('btn-outline-info');
+            btn.classList.add('btn-success');
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-outline-info');
+            }, 2000);
+        });
+        
+        // Chargement des filtres sauvegardés
         document.addEventListener('DOMContentLoaded', function() {
+            const savedFilters = localStorage.getItem('projets_filters');
+            if (savedFilters) {
+                const filters = JSON.parse(savedFilters);
+                
+                Object.keys(filters).forEach(key => {
+                    const element = document.getElementById(key.replace('_', '') + 'Filter');
+                    if (element && filters[key]) {
+                        element.value = filters[key];
+                    }
+                });
+                
+                // Appliquer les filtres sauvegardés
+                applyFilters();
+            }
+            
+            // Animation d'entrée des cartes
             const cards = document.querySelectorAll('.project-card');
             cards.forEach((card, index) => {
                 card.style.opacity = '0';
@@ -299,6 +684,19 @@
                     card.style.transform = 'translateY(0)';
                 }, index * 100);
             });
+        });
+        
+        // Vue grille/liste
+        document.getElementById('gridView').addEventListener('click', function() {
+            document.getElementById('folderlist-data').className = 'row';
+            this.classList.add('active');
+            document.getElementById('listView').classList.remove('active');
+        });
+        
+        document.getElementById('listView').addEventListener('click', function() {
+            document.getElementById('folderlist-data').className = 'row list-view';
+            this.classList.add('active');
+            document.getElementById('gridView').classList.remove('active');
         });
     </script>
 @endsection
