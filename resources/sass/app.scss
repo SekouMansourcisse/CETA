@@ -1,0 +1,92 @@
+// Fichier : resources/sass/app.scss
+
+// 1. Police d'écriture et Palette de couleurs
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+$primary: #6B73C7;
+$secondary: #7895B2;
+$light: #f8f9fc;
+$dark: #2c3e50;
+$success: #1cc88a;
+$info: #36b9cc;
+$warning: #f6c23e;
+$danger: #e74a3b;
+$font-family-sans-serif: 'Poppins', sans-serif;
+
+// 2. Surcharge des variables Bootstrap
+$border-radius: .5rem;
+$border-radius-lg: .8rem;
+$card-border-width: 0;
+$card-box-shadow: 0 0.5rem 1rem rgba(0,0,0,.1);
+$btn-box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+
+// 3. Import de Bootstrap (obligatoire)
+@import 'bootstrap/scss/bootstrap';
+
+// 4. Styles personnalisés
+.sidebar {
+    background: $dark;
+    .nav-link {
+        color: rgba(255,255,255,0.7);
+        font-weight: 500;
+        padding-top: .9rem;
+        padding-bottom: .9rem;
+        &.active, &:hover {
+            color: #fff;
+        }
+        &.active {
+            background-color: $primary;
+        }
+    }
+}
+
+.table {
+    thead th {
+        border: 0;
+        font-weight: 600;
+        color: #666;
+    }
+    tbody tr {
+        background-color: #fff;
+        border-radius: $border-radius-lg;
+        box-shadow: $card-box-shadow;
+        td {
+            border: 0;
+            padding: 1rem;
+            vertical-align: middle;
+            &:first-child { border-top-left-radius: $border-radius; border-bottom-left-radius: $border-radius; }
+            &:last-child { border-top-right-radius: $border-radius; border-bottom-right-radius: $border-radius; }
+        }
+    }
+}
+
+.card {
+    box-shadow: $card-box-shadow;
+}
+
+.btn {
+    transition: all 0.2s ease-in-out;
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+    }
+}
+
+// Fix for SweetAlert2 icon alignment
+.swal2-icon {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: block !important;
+    float: none !important; // Counteract any floating
+    position: relative !important; // Ensure relative positioning
+    left: 0 !important; // Reset left position
+    transform: none !important; // Reset any transforms that might be moving it
+}
+
+// Ensure the content within the modal is centered
+.swal2-html-container {
+    text-align: center !important;
+}
+.swal2-title {
+    text-align: center !important;
+}
