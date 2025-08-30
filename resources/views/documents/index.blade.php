@@ -10,7 +10,9 @@
             </ul>
         </div>
         <div class="page-btn">
+            @can('documents.create')
             <a href="{{ route('documents.create') }}" class="btn btn-added"><img src="{{ asset('template_assets/img/icons/plus.svg') }}" alt="img" class="me-1">Uploader un Document</a>
+            @endcan
         </div>
     </div>
 
@@ -43,9 +45,12 @@
                                     <td>{{ $document->nom }}</td>
                                     <td>{{ $document->date_upload }}</td>
                                     <td>
+                                        @can('documents.view')
                                         <a class="me-3" href="{{ route('documents.download', $document) }}">
                                             <img src="{{ asset('template_assets/img/icons/download.svg') }}" alt="img">
                                         </a>
+                                        @endcan
+                                        @can('documents.delete')
                                         <form action="{{ route('documents.destroy', $document) }}" method="POST" class="d-inline delete-form">
                                             @csrf
                                             @method('DELETE')
@@ -54,6 +59,7 @@
                                                  <img src="{{ asset('template_assets/img/icons/delete.svg') }}" alt="img">
                                             </button>
                                         </form>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach

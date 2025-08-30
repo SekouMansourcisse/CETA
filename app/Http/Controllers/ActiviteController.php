@@ -6,12 +6,17 @@ use App\Models\Activite;
 use App\Models\Projet;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log; // Added this line
 
 class ActiviteController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('can:activites.view')->only(['index', 'show', 'indexRealisations', 'indexEtudes', 'indexExpertises', 'indexAutorisations']);
+        $this->middleware('can:activites.create')->only(['create', 'store']);
+        $this->middleware('can:activites.edit')->only(['edit', 'update']);
+        $this->middleware('can:activites.delete')->only(['destroy']);
     }
 
     public function index(Request $request)
@@ -45,6 +50,9 @@ class ActiviteController extends Controller
 
     public function store(Request $request)
     {
+        Log::info('ActiviteController@store called.'); // Added log
+        Log::info('Request data: ' . json_encode($request->all())); // Added log
+
         $validatedData = $request->validate([
             'projet_id' => 'required|exists:projets,id',
             'type' => 'required|in:etude,expertise,realisation,autorisation',
@@ -55,13 +63,18 @@ class ActiviteController extends Controller
             'description' => 'required|string',
             'responsable_id' => 'required|exists:users,id',
         ]);
+        Log::info('Validation passed. Data: ' . json_encode($validatedData)); // Added log
+
         $validatedData['montant_realise'] = 0;
 
         $activite = Activite::create($validatedData);
 
+        $message = 'Activité créée avec succès.';
+        session()->flash('success', $message);
+
         return response()->json([
             'success' => true,
-            'message' => 'Activité créée avec succès.',
+            'message' => $message,
             'activite' => $activite
         ]);
     }
@@ -118,7 +131,7 @@ class ActiviteController extends Controller
     {
         $realisations = Activite::where('type', 'realisation')->with('projet', 'responsable')->latest()->get();
         $projets = Projet::all();
-        $responsables = User::where('role', 'architecte')->get();
+        $responsables = User::all();
         return view('realisations.index', compact('realisations', 'projets', 'responsables'));
     }
 
@@ -126,7 +139,7 @@ class ActiviteController extends Controller
     {
         $etudes = Activite::where('type', 'etude')->with('projet', 'responsable')->latest()->get();
         $projets = Projet::all();
-        $responsables = User::where('role', 'architecte')->get();
+        $responsables = User::all();
         return view('etudes.index', compact('etudes', 'projets', 'responsables'));
     }
 
@@ -134,7 +147,7 @@ class ActiviteController extends Controller
     {
         $expertises = Activite::where('type', 'expertise')->with('projet', 'responsable')->latest()->get();
         $projets = Projet::all();
-        $responsables = User::where('role', 'architecte')->get();
+        $responsables = User::all();
         return view('expertises.index', compact('expertises', 'projets', 'responsables'));
     }
 
@@ -142,7 +155,7 @@ class ActiviteController extends Controller
     {
         $autorisations = Activite::where('type', 'autorisation')->with('projet', 'responsable')->latest()->get();
         $projets = Projet::all();
-        $responsables = User::where('role', 'architecte')->get();
+        $responsables = User::all();
         return view('autorisations.index', compact('autorisations', 'projets', 'responsables'));
     }
 }

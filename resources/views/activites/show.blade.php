@@ -82,12 +82,16 @@
                 <h5 class="card-title">Actions Rapides</h5>
             </div>
             <div class="card-body">
+                @can('activites.edit')
                 <a href="{{ route('activites.edit', $activite) }}" class="btn btn-warning w-100 mb-2">Modifier l'activité</a>
+                @endcan
+                @can('activites.delete')
                 <form action="{{ route('activites.destroy', $activite) }}" method="POST" class="d-inline w-100 delete-form">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger w-100">Supprimer l'activité</button>
                 </form>
+                @endcan
             </div>
         </div>
     </div>
@@ -98,9 +102,11 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0">Documents Associés</h5>
+                @can('documents.create')
                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addDocumentModal">
                     <i class="fas fa-plus me-1"></i> Ajouter un document
                 </button>
+                @endcan
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -161,9 +167,11 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0">Dépenses Associées</h5>
+                    @can('depenses.create')
                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
                         <i class="fas fa-plus me-1"></i> Ajouter une dépense
                     </button>
+                    @endcan
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

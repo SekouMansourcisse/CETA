@@ -14,6 +14,9 @@ class ConversationController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('can:conversations.view')->only(['index', 'show', 'getMessages', 'findOrCreateConversation']);
+        $this->middleware('can:conversations.create')->only(['create', 'store', 'startConversation']);
+        // No edit/update/destroy methods in this controller, so no need to protect them here
     }
 
     public function index()

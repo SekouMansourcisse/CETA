@@ -10,7 +10,9 @@
             </ul>
         </div>
         <div class="page-btn">
+            @can('depenses.create')
             <a href="{{ route('depenses.create') }}" class="btn btn-added"><img src="{{ asset('template_assets/img/icons/plus.svg') }}" alt="img" class="me-1">Nouvelle Dépense</a>
+            @endcan
         </div>
     </div>
 
@@ -44,9 +46,12 @@
                                 <td>{{ ucfirst($depense->categorie) }}</td>
                                 <td>{{ number_format($depense->montant, 2, ',', ' ') }} €</td>
                                 <td>
+                                    @can('depenses.edit')
                                     <a class="me-3" href="{{ route('depenses.edit', $depense) }}">
                                         <img src="{{ asset('template_assets/img/icons/edit.svg') }}" alt="img">
                                     </a>
+                                    @endcan
+                                    @can('depenses.delete')
                                     <form action="{{ route('depenses.destroy', $depense) }}" method="POST" class="d-inline delete-form">
                                         @csrf
                                         @method('DELETE')
@@ -55,6 +60,7 @@
                                              <img src="{{ asset('template_assets/img/icons/delete.svg') }}" alt="img">
                                         </button>
                                     </form>
+                                    @endcan
                                 </td>
                             </tr>
                         @empty

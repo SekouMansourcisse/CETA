@@ -13,6 +13,8 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\RoleController;
+
 
 Auth::routes();
 
@@ -45,4 +47,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::put('/settings/profile', [SettingsController::class, 'updateProfile'])->name('settings.profile.update');
     Route::put('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password.update');
+
+    // Roles and Permissions
+    Route::resource('/settings/roles', RoleController::class)->except(['show']);
+    
+
+    
 });

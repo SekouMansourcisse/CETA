@@ -8,7 +8,9 @@
             <h6>Gérer vos utilisateurs</h6>
         </div>
         <div class="page-btn">
+            @can('users.create')
             <a href="#" class="btn btn-added" data-bs-toggle="modal" data-bs-target="#addUserModal"><img src="{{ asset('template_assets/img/icons/plus.svg') }}" alt="img" class="me-1">Ajouter un utilisateur</a>
+            @endcan
         </div>
     </div>
 
@@ -41,12 +43,20 @@
                                 @endif
                             </td>
                             <td>
-                                <a class="me-3" href="#">
+                                @can('users.edit')
+                                <a class="me-3" href="{{ route('users.edit', $user) }}">
                                     <img src="{{ asset('template_assets/img/icons/edit.svg') }}" alt="img">
                                 </a>
-                                <a class="me-3 confirm-text" href="javascript:void(0);">
-                                    <img src="{{ asset('template_assets/img/icons/delete.svg') }}" alt="img">
-                                </a>
+                                @endcan
+                                @can('users.delete')
+                                <form action="{{ route('users.destroy', $user) }}" method="POST" class="d-inline delete-form">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-link p-0 m-0">
+                                        <img src="{{ asset('template_assets/img/icons/delete.svg') }}" alt="img">
+                                    </button>
+                                </form>
+                                @endcan
                             </td>
                         </tr>
                         @endforeach

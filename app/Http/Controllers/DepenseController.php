@@ -13,6 +13,10 @@ class DepenseController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('can:depenses.view')->only(['index', 'show']);
+        $this->middleware('can:depenses.create')->only(['create', 'store', 'storeForActivity']);
+        $this->middleware('can:depenses.edit')->only(['edit', 'update']);
+        $this->middleware('can:depenses.delete')->only(['destroy']);
     }
 
     public function index()

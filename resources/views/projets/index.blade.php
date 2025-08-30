@@ -10,10 +10,12 @@
             </ul>
         </div>
         <div class="page-btn">
+            @can('projets.create')
             <a href="{{ route('projets.create') }}" class="btn btn-added">
                 <img src="{{ asset('template_assets/img/icons/plus.svg') }}" alt="img" class="me-1">
                 Créer un projet
             </a>
+            @endcan
         </div>
     </div>
 
@@ -152,9 +154,12 @@
                                                 <a href="{{ route('projets.show', $projet) }}" class="btn btn-outline-primary btn-sm" title="Voir">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
+                                                @can('projets.edit')
                                                 <a href="{{ route('projets.edit', $projet) }}" class="btn btn-outline-warning btn-sm" title="Modifier">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
+                                                @endcan
+                                                @can('projets.delete')
                                                 <form action="{{ route('projets.destroy', $projet) }}" method="POST" class="d-inline delete-form">
                                                     @csrf
                                                     @method('DELETE')
@@ -162,6 +167,7 @@
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>
+                                                @endcan
                                             </div>
                                         </div>
                                     </div>

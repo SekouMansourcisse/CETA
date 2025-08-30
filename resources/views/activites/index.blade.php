@@ -10,7 +10,9 @@
             </ul>
         </div>
         <div class="page-btn">
+            @can('activites.create')
             <a href="{{ route('activites.create') }}" class="btn btn-added"><img src="{{ asset('template_assets/img/icons/plus.svg') }}" alt="img" class="me-1">Nouvelle Activité</a>
+            @endcan
         </div>
     </div>
 
@@ -62,9 +64,12 @@
                                 <td>{{ $activite->date_debut }} au {{ $activite->date_fin }}</td>
                                 <td>{{ $activite->responsable->prenom }} {{ $activite->responsable->nom }}</td>
                                 <td>
+                                    @can('activites.edit')
                                     <a class="me-3" href="{{ route('activites.edit', $activite) }}">
                                         <img src="{{ asset('template_assets/img/icons/edit.svg') }}" alt="img">
                                     </a>
+                                    @endcan
+                                    @can('activites.delete')
                                     <form action="{{ route('activites.destroy', $activite) }}" method="POST" class="d-inline delete-form">
                                         @csrf
                                         @method('DELETE')
@@ -72,6 +77,7 @@
                                              <img src="{{ asset('template_assets/img/icons/delete.svg') }}" alt="img">
                                         </button>
                                     </form>
+                                    @endcan
                                 </td>
                             </tr>
                         @empty
@@ -85,3 +91,21 @@
         </div>
     </div>
 @endsection
+
+@include('activites._modal_create')
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        // Initialiser Select2 sur les dropdowns de la modale une fois qu'elle est chargée
+        $('#createActivityModal').on('shown.bs.modal', function () {
+            $('.select2-enable', this).select2({
+                dropdownParent: $('#createActivityModal'), // Important pour les modales
+                placeholder: 'Sélectionner...',
+                allowClear: true,
+                minimumResultsForSearch: 0 // Force l'affichage du champ de recherche
+            });
+        });
+    });
+</script>
+@endpush

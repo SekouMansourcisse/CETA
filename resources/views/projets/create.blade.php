@@ -35,7 +35,7 @@
                     <div class="col-lg-4 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Client</label>
-                            <select name="client_id" class="form-select @error('client_id') is-invalid @enderror" required>
+                            <select name="client_id" class="form-select select2-enable @error('client_id') is-invalid @enderror" required>
                                 @foreach($clients as $client)
                                     <option value="{{ $client->id }}" {{ old('client_id') == $client->id ? 'selected' : '' }}>{{ $client->societe ?? $client->prenom . ' ' . $client->nom }}</option>
                                 @endforeach
@@ -46,7 +46,7 @@
                     <div class="col-lg-4 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Responsable</label>
-                            <select name="responsable_id" class="form-select @error('responsable_id') is-invalid @enderror" required>
+                            <select name="responsable_id" class="form-select select2-enable @error('responsable_id') is-invalid @enderror" required>
                                 @foreach($responsables as $responsable)
                                     <option value="{{ $responsable->id }}" {{ old('responsable_id') == $responsable->id ? 'selected' : '' }}>{{ $responsable->prenom }} {{ $responsable->nom }}</option>
                                 @endforeach
@@ -97,3 +97,14 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        $('.select2-enable').select2({
+            placeholder: 'Sélectionner...',
+            allowClear: true
+        });
+    });
+</script>
+@endpush

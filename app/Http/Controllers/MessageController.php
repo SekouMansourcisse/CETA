@@ -14,6 +14,7 @@ class MessageController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('can:conversations.create')->only(['store']);
     }
 
     public function store(Request $request)

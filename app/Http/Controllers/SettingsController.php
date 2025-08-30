@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Spatie\Permission\Models\Role;
 
 class SettingsController extends Controller
 {
@@ -20,7 +21,8 @@ class SettingsController extends Controller
     {
         $users = User::all();
         $historiques = Historique::with('user')->latest()->paginate(10);
-        return view('settings.index', compact('users', 'historiques'));
+        $roles = Role::all();
+        return view('settings.index', compact('users', 'historiques', 'roles'));
     }
 
     public function updateProfile(Request $request)

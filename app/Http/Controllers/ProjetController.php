@@ -12,6 +12,10 @@ class ProjetController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('can:projets.view')->only(['index', 'show']);
+        $this->middleware('can:projets.create')->only(['create', 'store']);
+        $this->middleware('can:projets.edit')->only(['edit', 'update']);
+        $this->middleware('can:projets.delete')->only(['destroy']);
     }
 
     public function index(Request $request)

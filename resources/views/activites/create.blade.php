@@ -80,13 +80,7 @@
                             @error('montant_prevu') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                     </div>
-                    <div class="col-lg-4 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Montant Réalisé (€)</label>
-                            <input type="number" step="0.01" name="montant_realise" class="form-control @error('montant_realise') is-invalid @enderror" value="{{ old('montant_realise') }}" required>
-                            @error('montant_realise') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>
-                    </div>
+                    
                     <div class="col-lg-4 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Statut</label>

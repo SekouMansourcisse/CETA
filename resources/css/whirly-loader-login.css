@@ -1,0 +1,342 @@
+/* Whirly-loader refait avec la palette de couleurs du login */
+
+/* Container du loader global */
+#global-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+/* Whirly-loader avec palette du login */
+.whirly-loader {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: transparent;
+    animation: whirly-loader 1.5s linear infinite;
+}
+
+.whirly-loader:not(:required) {
+    animation: whirly-loader 1.5s linear infinite;
+    background: transparent;
+    box-shadow: 
+        0 26px 0 6px #666699,  /* Violet-gris principal du login */
+        0.90971px 26.05079px 0 5.93333px #676798,  /* Violet-gris foncé du login */
+        1.82297px 26.06967px 0 5.86667px #5555AA,  /* Violet bleuté du login */
+        2.73865px 26.05647px 0 5.8px #65659A,  /* Violet-gris proche du login */
+        3.65434px 26.04326px 0 5.73333px #666699,  /* Répétition pour variété */
+        4.57003px 26.03006px 0 5.66667px #676798,  /* Répétition pour variété */
+        5.48572px 26.01685px 0 5.6px #5555AA,  /* Répétition pour variété */
+        6.40141px 26.00365px 0 5.53333px #65659A,  /* Répétition pour variété */
+        7.3171px 25.99044px 0 5.46667px #666699,  /* Répétition pour variété */
+        8.23279px 25.97724px 0 5.4px #676798,  /* Répétition pour variété */
+        9.14848px 25.96403px 0 5.33333px #5555AA,  /* Répétition pour variété */
+        10.06417px 25.95083px 0 5.26667px #65659A,  /* Répétition pour variété */
+        10.97986px 25.93762px 0 5.2px #666699,  /* Répétition pour variété */
+        11.89555px 25.92442px 0 5.13333px #676798,  /* Répétition pour variété */
+        12.81124px 25.91121px 0 5.06667px #5555AA,  /* Répétition pour variété */
+        13.72693px 25.89801px 0 5px #65659A,  /* Répétition pour variété */
+        14.64262px 25.8848px 0 4.93333px #666699,  /* Répétition pour variété */
+        15.55831px 25.8716px 0 4.86667px #676798,  /* Répétition pour variété */
+        16.474px 25.85839px 0 4.8px #5555AA,  /* Répétition pour variété */
+        17.38969px 25.84519px 0 4.73333px #65659A,  /* Répétition pour variété */
+        18.30538px 25.83198px 0 4.66667px #666699,  /* Répétition pour variété */
+        19.22107px 25.81878px 0 4.6px #676798,  /* Répétition pour variété */
+        20.13676px 25.80557px 0 4.53333px #5555AA,  /* Répétition pour variété */
+        21.05245px 25.79237px 0 4.46667px #65659A,  /* Répétition pour variété */
+        21.96814px 25.77916px 0 4.4px #666699,  /* Répétition pour variété */
+        22.88383px 25.76596px 0 4.33333px #676798,  /* Répétition pour variété */
+        23.79952px 25.75275px 0 4.26667px #5555AA,  /* Répétition pour variété */
+        24.71521px 25.73955px 0 4.2px #65659A,  /* Répétition pour variété */
+        25.6309px 25.72634px 0 4.13333px #666699,  /* Répétition pour variété */
+        26.54659px 25.71314px 0 4.06667px #676798,  /* Répétition pour variété */
+        27.46228px 25.69993px 0 4px #5555AA,  /* Répétition pour variété */
+        28.37797px 25.68673px 0 3.93333px #65659A,  /* Répétition pour variété */
+        29.29366px 25.67352px 0 3.86667px #666699,  /* Répétition pour variété */
+        30.20935px 25.66032px 0 3.8px #676798,  /* Répétition pour variété */
+        31.12504px 25.64711px 0 3.73333px #5555AA,  /* Répétition pour variété */
+        32.04073px 25.63391px 0 3.66667px #65659A,  /* Répétition pour variété */
+        32.95642px 25.6207px 0 3.6px #666699,  /* Répétition pour variété */
+        33.87211px 25.6075px 0 3.53333px #676798,  /* Répétition pour variété */
+        34.7878px 25.59429px 0 3.46667px #5555AA,  /* Répétition pour variété */
+        35.70349px 25.58109px 0 3.4px #65659A,  /* Répétition pour variété */
+        36.61918px 25.56788px 0 3.33333px #666699,  /* Répétition pour variété */
+        37.53487px 25.55468px 0 3.26667px #676798,  /* Répétition pour variété */
+        38.45056px 25.54147px 0 3.2px #5555AA,  /* Répétition pour variété */
+        39.36625px 25.52827px 0 3.13333px #65659A,  /* Répétition pour variété */
+        40.28194px 25.51506px 0 3.06667px #666699,  /* Répétition pour variété */
+        41.19763px 25.50186px 0 3px #676798,  /* Répétition pour variété */
+        42.11332px 25.48865px 0 2.93333px #5555AA,  /* Répétition pour variété */
+        43.02901px 25.47545px 0 2.86667px #65659A,  /* Répétition pour variété */
+        43.9447px 25.46224px 0 2.8px #666699,  /* Répétition pour variété */
+        44.86039px 25.44904px 0 2.73333px #676798,  /* Répétition pour variété */
+        45.77608px 25.43583px 0 2.66667px #5555AA,  /* Répétition pour variété */
+        46.69177px 25.42263px 0 2.6px #65659A,  /* Répétition pour variété */
+        47.60746px 25.40942px 0 2.53333px #666699,  /* Répétition pour variété */
+        48.52315px 25.39622px 0 2.46667px #676798,  /* Répétition pour variété */
+        49.43884px 25.38301px 0 2.4px #5555AA,  /* Répétition pour variété */
+        50.35453px 25.36981px 0 2.33333px #65659A,  /* Répétition pour variété */
+        51.27022px 25.3566px 0 2.26667px #666699,  /* Répétition pour variété */
+        52.18591px 25.3434px 0 2.2px #676798,  /* Répétition pour variété */
+        53.1016px 25.33019px 0 2.13333px #5555AA,  /* Répétition pour variété */
+        54.01729px 25.31709px 0 2.06667px #65659A,  /* Répétition pour variété */
+        54.93298px 25.30388px 0 2px #666699,  /* Répétition pour variété */
+        55.84867px 25.29068px 0 1.93333px #676798,  /* Répétition pour variété */
+        56.76436px 25.27747px 0 1.86667px #5555AA,  /* Répétition pour variété */
+        57.68005px 25.26427px 0 1.8px #65659A,  /* Répétition pour variété */
+        58.59574px 25.25106px 0 1.73333px #666699,  /* Répétition pour variété */
+        59.51143px 25.23786px 0 1.66667px #676798,  /* Répétition pour variété */
+        60.42712px 25.22465px 0 1.6px #5555AA,  /* Répétition pour variété */
+        61.34281px 25.21145px 0 1.53333px #65659A,  /* Répétition pour variété */
+        62.2585px 25.19824px 0 1.46667px #666699,  /* Répétition pour variété */
+        63.17419px 25.18504px 0 1.4px #676798,  /* Répétition pour variété */
+        64.08988px 25.17183px 0 1.33333px #5555AA,  /* Répétition pour variété */
+        65.00557px 25.15863px 0 1.26667px #65659A,  /* Répétition pour variété */
+        65.92126px 25.14542px 0 1.2px #666699,  /* Répétition pour variété */
+        66.83695px 25.13222px 0 1.13333px #676798,  /* Répétition pour variété */
+        67.75264px 25.11901px 0 1.06667px #5555AA,  /* Répétition pour variété */
+        68.66833px 25.10581px 0 1px #65659A;  /* Répétition pour variété */
+}
+
+/* Animation de rotation du whirly-loader */
+@-webkit-keyframes whirly-loader {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(1turn);
+        transform: rotate(1turn);
+    }
+}
+
+@keyframes whirly-loader {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(1turn);
+        transform: rotate(1turn);
+    }
+}
+
+/* Effet de fondu pour l'apparition/disparition */
+#global-loader {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+#global-loader.fade-out {
+    opacity: 0;
+}
+
+/* Responsive design pour le whirly-loader */
+@media (max-width: 768px) {
+    .whirly-loader {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .whirly-loader:not(:required) {
+        box-shadow: 
+            0 22px 0 5px #666699,
+            0.90971px 22.05079px 0 4.93333px #676798,
+            1.82297px 22.06967px 0 4.86667px #5555AA,
+            2.73865px 22.05647px 0 4.8px #65659A,
+            3.65434px 22.04326px 0 4.73333px #666699,
+            4.57003px 22.03006px 0 4.66667px #676798,
+            5.48572px 22.01685px 0 4.6px #5555AA,
+            6.40141px 22.00365px 0 4.53333px #65659A,
+            7.3171px 21.99044px 0 4.46667px #666699,
+            8.23279px 21.97724px 0 4.4px #676798,
+            9.14848px 21.96403px 0 4.33333px #5555AA,
+            10.06417px 21.95083px 0 4.26667px #65659A,
+            10.97986px 21.93762px 0 4.2px #666699,
+            11.89555px 21.92442px 0 4.13333px #676798,
+            12.81124px 21.91121px 0 4.06667px #5555AA,
+            13.72693px 21.89801px 0 4px #65659A,
+            14.64262px 21.8848px 0 3.93333px #666699,
+            15.55831px 21.8716px 0 3.86667px #676798,
+            16.474px 21.85839px 0 3.8px #5555AA,
+            17.38969px 21.84519px 0 3.73333px #65659A,
+            18.30538px 21.83198px 0 3.66667px #666699,
+            19.22107px 21.81878px 0 3.6px #676798,
+            20.13676px 21.80557px 0 3.53333px #5555AA,
+            21.05245px 21.79237px 0 3.46667px #65659A,
+            21.96814px 21.77916px 0 3.4px #666699,
+            22.88383px 21.76596px 0 3.33333px #676798,
+            23.79952px 21.75275px 0 3.26667px #5555AA,
+            24.71521px 21.73955px 0 3.2px #65659A,
+            25.6309px 21.72634px 0 3.13333px #666699,
+            26.54659px 21.71314px 0 3.06667px #676798,
+            27.46228px 21.69993px 0 3px #5555AA,
+            28.37797px 21.68673px 0 2.93333px #65659A,
+            29.29366px 21.67352px 0 2.86667px #666699,
+            30.20935px 21.66032px 0 2.8px #676798,
+            31.12504px 21.64711px 0 2.73333px #5555AA,
+            32.04073px 21.63391px 0 2.66667px #65659A,
+            32.95642px 21.6207px 0 2.6px #666699,
+            33.87211px 21.6075px 0 2.53333px #676798,
+            34.7878px 21.59429px 0 2.46667px #5555AA,
+            35.70349px 21.58109px 0 2.4px #65659A,
+            36.61918px 21.56788px 0 2.33333px #666699,
+            37.53487px 21.55468px 0 2.26667px #676798,
+            38.45056px 21.54147px 0 2.2px #5555AA,
+            39.36625px 21.52827px 0 2.13333px #65659A,
+            40.28194px 21.51506px 0 2.06667px #666699,
+            41.19763px 21.50186px 0 2px #676798,
+            42.11332px 21.48865px 0 1.93333px #5555AA,
+            43.02901px 21.47545px 0 1.86667px #65659A,
+            43.9447px 21.46224px 0 1.8px #666699,
+            44.86039px 21.44904px 0 1.73333px #676798,
+            45.77608px 21.43583px 0 1.66667px #5555AA,
+            46.69177px 21.42263px 0 1.6px #65659A,
+            47.60746px 21.40942px 0 1.53333px #666699,
+            48.52315px 21.39622px 0 1.46667px #676798,
+            49.43884px 21.38301px 0 1.4px #5555AA,
+            50.35453px 21.36981px 0 1.33333px #65659A,
+            51.27022px 21.3566px 0 1.26667px #666699,
+            52.18591px 21.3434px 0 1.2px #676798,
+            53.1016px 21.33019px 0 1.13333px #5555AA,
+            54.01729px 21.31709px 0 1.06667px #65659A,
+            54.93298px 21.30388px 0 1px #666699,
+            55.84867px 21.29068px 0 0.93333px #676798,
+            56.76436px 21.27747px 0 0.86667px #5555AA,
+            57.68005px 21.26427px 0 0.8px #65659A,
+            58.59574px 21.25106px 0 0.73333px #666699,
+            59.51143px 21.23786px 0 0.66667px #676798,
+            60.42712px 21.22465px 0 0.6px #5555AA,
+            61.34281px 21.21145px 0 0.53333px #65659A,
+            62.2585px 21.19824px 0 0.46667px #666699,
+            63.17419px 21.18504px 0 0.4px #676798,
+            64.08988px 21.17183px 0 0.33333px #5555AA,
+            65.00557px 21.15863px 0 0.26667px #65659A,
+            65.92126px 21.14542px 0 0.2px #666699,
+            66.83695px 21.13222px 0 0.13333px #676798,
+            67.75264px 21.11901px 0 0.06667px #5555AA,
+            68.66833px 21.10581px 0 0px #65659A;
+    }
+}
+
+@media (max-width: 480px) {
+    .whirly-loader {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .whirly-loader:not(:required) {
+        box-shadow: 
+            0 18px 0 4px #666699,
+            0.90971px 18.05079px 0 3.93333px #676798,
+            1.82297px 18.06967px 0 3.86667px #5555AA,
+            2.73865px 18.05647px 0 3.8px #65659A,
+            3.65434px 18.04326px 0 3.73333px #666699,
+            4.57003px 18.03006px 0 3.66667px #676798,
+            5.48572px 18.01685px 0 3.6px #5555AA,
+            6.40141px 18.00365px 0 3.53333px #65659A,
+            7.3171px 17.99044px 0 3.46667px #666699,
+            8.23279px 17.97724px 0 3.4px #676798,
+            9.14848px 17.96403px 0 3.33333px #5555AA,
+            10.06417px 17.95083px 0 3.26667px #65659A,
+            10.97986px 17.93762px 0 3.2px #666699,
+            11.89555px 17.92442px 0 3.13333px #676798,
+            12.81124px 17.91121px 0 3.06667px #5555AA,
+            13.72693px 17.89801px 0 3px #65659A,
+            14.64262px 17.8848px 0 2.93333px #666699,
+            15.55831px 17.8716px 0 2.86667px #676798,
+            16.474px 17.85839px 0 2.8px #5555AA,
+            17.38969px 17.84519px 0 2.73333px #65659A,
+            18.30538px 17.83198px 0 2.66667px #666699,
+            19.22107px 17.81878px 0 2.6px #676798,
+            20.13676px 17.80557px 0 2.53333px #5555AA,
+            21.05245px 17.79237px 0 2.46667px #65659A,
+            21.96814px 17.77916px 0 2.4px #666699,
+            22.88383px 17.76596px 0 2.33333px #676798,
+            23.79952px 17.75275px 0 2.26667px #5555AA,
+            24.71521px 17.73955px 0 2.2px #65659A,
+            25.6309px 17.72634px 0 2.13333px #666699,
+            26.54659px 17.71314px 0 2.06667px #676798,
+            27.46228px 17.69993px 0 2px #5555AA,
+            28.37797px 17.68673px 0 1.93333px #65659A,
+            29.29366px 17.67352px 0 1.86667px #666699,
+            30.20935px 17.66032px 0 1.8px #676798,
+            31.12504px 17.64711px 0 1.73333px #5555AA,
+            32.04073px 17.63391px 0 1.66667px #65659A,
+            32.95642px 17.6207px 0 1.6px #666699,
+            33.87211px 17.6075px 0 1.53333px #676798,
+            34.7878px 17.59429px 0 1.46667px #5555AA,
+            35.70349px 17.58109px 0 1.4px #65659A,
+            36.61918px 17.56788px 0 1.33333px #666699,
+            37.53487px 17.55468px 0 1.26667px #676798,
+            38.45056px 17.54147px 0 1.2px #5555AA,
+            39.36625px 17.52827px 0 1.13333px #65659A,
+            40.28194px 17.51506px 0 1.06667px #666699,
+            41.19763px 17.50186px 0 1px #676798,
+            42.11332px 17.48865px 0 0.93333px #5555AA,
+            43.02901px 17.47545px 0 0.86667px #65659A,
+            43.9447px 17.46224px 0 0.8px #666699,
+            44.86039px 17.44904px 0 0.73333px #676798,
+            45.77608px 17.43583px 0 0.66667px #5555AA,
+            46.69177px 17.42263px 0 0.6px #65659A,
+            47.60746px 17.40942px 0 0.53333px #666699,
+            48.52315px 17.39622px 0 0.46667px #676798,
+            49.43884px 17.38301px 0 0.4px #5555AA,
+            50.35453px 17.36981px 0 0.33333px #65659A,
+            51.27022px 17.3566px 0 0.26667px #666699,
+            52.18591px 17.3434px 0 0.2px #676798,
+            53.1016px 17.33019px 0 0.13333px #5555AA,
+            54.01729px 17.31709px 0 0.06667px #65659A,
+            54.93298px 17.30388px 0 0px #666699;
+    }
+}
+
+/* Animation d'apparition du loader */
+@keyframes loaderFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+#global-loader {
+    animation: loaderFadeIn 0.3s ease-out;
+}
+
+/* Effet de pulsation subtile */
+.whirly-loader::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(102, 102, 153, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 0.6;
+    }
+}

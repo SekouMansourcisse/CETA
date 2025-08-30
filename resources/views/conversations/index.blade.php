@@ -60,6 +60,7 @@
                         </div>
 
                         <!-- Users Tab Content -->
+                        @can('conversations.create')
                         <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
                             <div class="card-body contacts_body chat-users-list chat-scroll">
                                 @forelse ($allUsers as $user)
@@ -81,6 +82,7 @@
                                 @endforelse
                             </div>
                         </div>
+                        @endcan
                     </div>
                 </div>
             </div>

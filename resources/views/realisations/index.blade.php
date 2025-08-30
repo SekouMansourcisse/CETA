@@ -11,22 +11,12 @@
             </ul>
         </div>
         <div class="page-btn">
-            @if(Auth::user()->role === 'admin' || Auth::user()->role === 'architecte')
-                @if($responsables->isEmpty())
-                    <div class="d-flex flex-column align-items-end">
-                        <button type="button" class="btn btn-added" disabled>
-                            <img src="{{ asset('template_assets/img/icons/plus.svg') }}" alt="img" class="me-1">
-                            Nouvelle Réalisation
-                        </button>
-                        <small class="text-danger mt-1">Aucun architecte disponible pour assignation.</small>
-                    </div>
-                @else
+            @can('activites.create')
                     <button type="button" class="btn btn-added" data-bs-toggle="modal" data-bs-target="#createActivityModal" data-activity-type="realisation">
                         <img src="{{ asset('template_assets/img/icons/plus.svg') }}" alt="img" class="me-1">
                         Nouvelle Réalisation
                     </button>
-                @endif
-            @endif
+            @endcan
         </div>
     </div>
 
@@ -129,9 +119,12 @@
                                                 <a href="{{ route('activites.show', $realisation) }}" class="btn btn-outline-info btn-sm" title="Voir les détails">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
+                                                @can('activites.edit')
                                                 <a href="{{ route('activites.edit', $realisation) }}" class="btn btn-outline-warning btn-sm" title="Modifier">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
+                                                @endcan
+                                                @can('activites.delete')
                                                 <form action="{{ route('activites.destroy', $realisation) }}" method="POST" class="d-inline delete-form">
                                                     @csrf
                                                     @method('DELETE')
@@ -139,6 +132,7 @@
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>
+                                                @endcan
                                             </div>
                                         </div>
                                     </div>

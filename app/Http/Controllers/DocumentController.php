@@ -16,6 +16,9 @@ class DocumentController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('can:documents.view')->only(['index', 'show', 'download']);
+        $this->middleware('can:documents.create')->only(['create', 'store', 'store2', 'storeForActivity']);
+        $this->middleware('can:documents.delete')->only(['destroy']);
     }
 
     public function index()

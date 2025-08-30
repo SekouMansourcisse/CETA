@@ -12,6 +12,10 @@ class PaiementController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('can:paiements.view')->only(['index', 'show']);
+        $this->middleware('can:paiements.create')->only(['create', 'store']);
+        $this->middleware('can:paiements.edit')->only(['edit', 'update']);
+        $this->middleware('can:paiements.delete')->only(['destroy']);
     }
 
     public function index()

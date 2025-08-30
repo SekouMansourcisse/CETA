@@ -43,11 +43,13 @@
                     <div class="col-lg-6 col-sm-12">
                         <div class="form-group">
                             <label>Rôle</label>
-                            <select name="role" class="form-select @error('role') is-invalid @enderror" required>
-                                <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>
-                                <option value="user" {{ old('role', $user->role) == 'user' ? 'selected' : '' }}>Utilisateur</option>
+                            <select name="role_name" class="form-select @error('role_name') is-invalid @enderror" required>
+                                <option value="">Sélectionner un rôle</option>
+                                @foreach($roles as $role)
+                                    <option value="{{ $role->name }}" {{ old('role_name', $user->roles->first()->name ?? '') == $role->name ? 'selected' : '' }}>{{ ucfirst($role->name) }}</option>
+                                @endforeach
                             </select>
-                            @error('role') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            @error('role_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                     </div>
                     <div class="col-lg-6 col-sm-12">

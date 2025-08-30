@@ -14,6 +14,9 @@
     <link rel="stylesheet" href="{{ asset('template_assets/plugins/fontawesome/css/fontawesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('template_assets/plugins/fontawesome/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('template_assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('template_assets/plugins/select2/css/select2.min.css') }}">
+    <!-- Whirly-loader personnalisé avec palette du login -->
+    <link rel="stylesheet" href="{{ asset('resources/css/whirly-loader-login.css') }}">
     @stack('styles')
 </head>
 <body>
@@ -27,6 +30,20 @@
 
         <div class="page-wrapper">
             <div class="content">
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Succès !</strong> {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Erreur !</strong> {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
                 @yield('content')
             </div>
         </div>
@@ -37,6 +54,7 @@
     <script src="{{ asset('template_assets/js/jquery.slimscroll.min.js') }}"></script>
     <script src="{{ asset('template_assets/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('template_assets/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('template_assets/plugins/select2/js/select2.min.js') }}"></script>
     
     <!-- Ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>

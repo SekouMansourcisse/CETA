@@ -10,7 +10,9 @@
             </ul>
         </div>
         <div class="page-btn">
+            @can('paiements.create')
             <a href="{{ route('paiements.create') }}" class="btn btn-added"><img src="{{ asset('template_assets/img/icons/plus.svg') }}" alt="img" class="me-1">Enregistrer un Paiement</a>
+            @endcan
         </div>
     </div>
 
@@ -44,9 +46,12 @@
                                 <td>{{ ucfirst($paiement->moyen_paiement) }}</td>
                                 <td>{{ number_format($paiement->montant, 2, ',', ' ') }} €</td>
                                 <td>
+                                    @can('paiements.edit')
                                     <a class="me-3" href="{{ route('paiements.edit', $paiement) }}">
                                         <img src="{{ asset('template_assets/img/icons/edit.svg') }}" alt="img">
                                     </a>
+                                    @endcan
+                                    @can('paiements.delete')
                                     <form action="{{ route('paiements.destroy', $paiement) }}" method="POST" class="d-inline delete-form">
                                         @csrf
                                         @method('DELETE')
@@ -54,6 +59,7 @@
                                              <img src="{{ asset('template_assets/img/icons/delete.svg') }}" alt="img">
                                         </button>
                                     </form>
+                                    @endcan
                                 </td>
                             </tr>
                         @empty

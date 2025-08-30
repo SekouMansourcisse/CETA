@@ -6,11 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 use App\Traits\HasHistorique;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasHistorique;
+    use HasFactory, Notifiable, HasHistorique, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -23,7 +24,6 @@ class User extends Authenticatable
         'email',
         'password',
         'login',
-        'role',
         'actif',
     ];
 

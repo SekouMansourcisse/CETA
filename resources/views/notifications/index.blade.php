@@ -47,6 +47,7 @@
                                     @endif
                                 </td>
                                 <td>
+                                    @can('notifications.edit')
                                     @if(!$notification->lu)
                                         <form action="{{ route('notifications.read', $notification) }}" method="POST" class="d-inline me-3">
                                             @csrf
@@ -55,6 +56,8 @@
                                             </button>
                                         </form>
                                     @endif
+                                    @endcan
+                                    @can('notifications.delete')
                                     <form action="{{ route('notifications.destroy', $notification) }}" method="POST" class="d-inline delete-form">
                                         @csrf
                                         @method('DELETE')
@@ -62,6 +65,7 @@
                                             <img src="{{ asset('template_assets/img/icons/delete.svg') }}" alt="img">
                                         </button>
                                     </form>
+                                    @endcan
                                 </td>
                             </tr>
                         @empty

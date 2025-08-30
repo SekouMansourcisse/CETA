@@ -27,6 +27,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#solid-rounded-tab2" data-bs-toggle="tab">Gestion des utilisateurs</a>
                     </li>
+                    @can('roles.view')
+                    <li class="nav-item">
+                        <a class="nav-link" href="#roles-permissions-tab" data-bs-toggle="tab">Rôles & Permissions</a>
+                    </li>
+                    @endcan
                     <li class="nav-item">
                         <a class="nav-link" href="#solid-rounded-tab3" data-bs-toggle="tab">Sécurité</a>
                     </li>
@@ -84,9 +89,11 @@
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h5 class="card-title mb-0">Utilisateurs du Cabinet</h5>
+                                @can('users.create')
                                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addUserModal">
                                     <i class="fas fa-plus me-1"></i> Ajouter un utilisateur
                                 </button>
+                                @endcan
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -103,10 +110,13 @@
                                             @foreach($users as $u)
                                                 <tr>
                                                     <td>{{ $u->prenom }} {{ $u->nom }}</td>
-                                                    <td>{{ $u->role }}</td>
+                                                    <td>{{ $u->getRoleNames()->implode(', ') }}</td>
                                                     <td><span class="badge {{ $u->actif ? 'bg-success' : 'bg-danger' }}">{{ $u->actif ? 'Actif' : 'Inactif' }}</span></td>
                                                     <td>
+                                                        @can('users.edit')
                                                         <a class="me-3" href="{{ route('users.edit', $u) }}"><img src="{{ asset('template_assets/img/icons/edit.svg') }}" alt="img"></a>
+                                                        @endcan
+                                                        @can('users.delete')
                                                         <form action="{{ route('users.destroy', $u) }}" method="POST" class="d-inline delete-form">
                                                             @csrf
                                                             @method('DELETE')
@@ -115,6 +125,7 @@
                                                                 <img src="{{ asset('template_assets/img/icons/delete.svg') }}" alt="img">
                                                             </button>
                                                         </form>
+                                                        @endcan
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -164,6 +175,54 @@
                             </div>
                         </div>
                     </div>
+
+                    @can('roles.view')
+                    <div class="tab-pane" id="roles-permissions-tab">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Gestion des Rôles</h5>
+                                <a href="{{ route('roles.create') }}" class="btn btn-primary btn-sm"><i class="fas fa-plus me-1"></i> Ajouter un rôle</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table datanew">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Nom du Rôle</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse ($roles as $role)
+                                                <tr>
+                                                    <td>{{ $role->id }}</td>
+                                                    <td>{{ $role->name }}</td>
+                                                    <td>
+                                                        <a class="me-3" href="{{ route('roles.edit', $role) }}">
+                                                            <img src="{{ asset('template_assets/img/icons/edit.svg') }}" alt="img">
+                                                        </a>
+                                                        <form action="{{ route('roles.destroy', $role) }}" method="POST" class="d-inline delete-form">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-link p-0 m-0">
+                                                                <img src="{{ asset('template_assets/img/icons/delete.svg') }}" alt="img">
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="3" class="text-center">Aucun rôle trouvé.</td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endcan
 
                     <div class="tab-pane" id="solid-rounded-tab4">
                         <div class="card">
@@ -243,9 +302,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="user_role" class="form-label">Rôle</label>
-                        <select class="form-select" id="user_role" name="role" required>
-                            <option value="admin">Admin</option>
-                            <option value="user">Utilisateur</option>
+                        <select class="form-select" id="user_role" name="role_name" required>
+                            <option value="">Sélectionner un rôle</option>
+                            @foreach($roles as $role)
+                                <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="mb-3 form-check">

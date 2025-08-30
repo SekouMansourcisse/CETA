@@ -20,6 +20,7 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('can:home.view');
     }
 
     /**
@@ -82,6 +83,49 @@ class HomeController extends Controller
         $autorisationStatusLabels = array_keys($autorisationStatuses);
         $autorisationStatusSeries = array_values($autorisationStatuses);
 
+        // Fetch Activity Type data for the chart
+        $activityTypes = Activite::select('type', DB::raw('count(*) as count'))
+                                ->groupBy('type')
+                                ->pluck('count', 'type')
+                                ->toArray();
+        
+        // S'assurer qu'on a des données pour tous les types d'activités
+        $allTypes = ['etude', 'expertise', 'realisation', 'autorisation'];
+        foreach ($allTypes as $type) {
+            if (!isset($activityTypes[$type])) {
+                $activityTypes[$type] = 0;
+            }
+        }
+        
+        $activityTypeLabels = array_keys($activityTypes);
+        $activityTypeSeries = array_values($activityTypes);
+
+        // S'assurer que tous les graphiques ont au moins des données vides si nécessaire
+        if (empty($projectStatusLabels)) {
+            $projectStatusLabels = ['Aucun projet'];
+            $projectStatusSeries = [0];
+        }
+        
+        if (empty($realisationStatusLabels)) {
+            $realisationStatusLabels = ['Aucune réalisation'];
+            $realisationStatusSeries = [0];
+        }
+        
+        if (empty($etudeStatusLabels)) {
+            $etudeStatusLabels = ['Aucune étude'];
+            $etudeStatusSeries = [0];
+        }
+        
+        if (empty($expertiseStatusLabels)) {
+            $expertiseStatusLabels = ['Aucune expertise'];
+            $expertiseStatusSeries = [0];
+        }
+        
+        if (empty($autorisationStatusLabels)) {
+            $autorisationStatusLabels = ['Aucune autorisation'];
+            $autorisationStatusSeries = [0];
+        }
+
         return view('home', compact(
             'stats',
             'projectStatusLabels',
@@ -93,7 +137,9 @@ class HomeController extends Controller
             'expertiseStatusLabels',
             'expertiseStatusSeries',
             'autorisationStatusLabels',
-            'autorisationStatusSeries'
+            'autorisationStatusSeries',
+            'activityTypeLabels',
+            'activityTypeSeries'
         ));
     }
 }

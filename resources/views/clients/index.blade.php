@@ -10,7 +10,9 @@
             </ul>
         </div>
         <div class="page-btn">
+            @can('clients.create')
             <a href="{{ route('clients.create') }}" class="btn btn-added"><img src="{{ asset('template_assets/img/icons/plus.svg') }}" alt="img" class="me-1">Ajouter un Client</a>
+            @endcan
         </div>
     </div>
 
@@ -42,9 +44,12 @@
                                 <td>{{ $client->telephone }}</td>
                                 <td>{{ ucfirst($client->type_client) }}</td>
                                 <td>
+                                    @can('clients.edit')
                                     <a class="me-3" href="{{ route('clients.edit', $client) }}">
                                         <img src="{{ asset('template_assets/img/icons/edit.svg') }}" alt="img">
                                     </a>
+                                    @endcan
+                                    @can('clients.delete')
                                     <form action="{{ route('clients.destroy', $client) }}" method="POST" class="d-inline delete-form">
                                         @csrf
                                         @method('DELETE')
@@ -52,6 +57,7 @@
                                              <img src="{{ asset('template_assets/img/icons/delete.svg') }}" alt="img">
                                         </button>
                                     </form>
+                                    @endcan
                                 </td>
                             </tr>
                         @empty

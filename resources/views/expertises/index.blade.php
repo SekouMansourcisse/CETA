@@ -11,7 +11,8 @@
             </ul>
         </div>
         <div class="page-btn">
-            @if(Auth::user()->role === 'admin' || Auth::user()->role === 'architecte')
+                    <div class="page-btn">
+            @can('activites.create')
                 @if($responsables->isEmpty())
                     <div class="d-flex flex-column align-items-end">
                         <button type="button" class="btn btn-added" disabled>
@@ -26,7 +27,8 @@
                         Nouvelle Expertise
                     </button>
                 @endif
-            @endif
+            @endcan
+        </div>
         </div>
     </div>
 
@@ -129,9 +131,12 @@
                                                 <a href="{{ route('activites.show', $expertise) }}" class="btn btn-outline-info btn-sm" title="Voir les détails">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
+                                                @can('activites.edit')
                                                 <a href="{{ route('activites.edit', $expertise) }}" class="btn btn-outline-warning btn-sm" title="Modifier">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
+                                                @endcan
+                                                @can('activites.delete')
                                                 <form action="{{ route('activites.destroy', $expertise) }}" method="POST" class="d-inline delete-form">
                                                     @csrf
                                                     @method('DELETE')
@@ -139,6 +144,7 @@
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>
+                                                @endcan
                                             </div>
                                         </div>
                                     </div>
@@ -247,6 +253,23 @@
         });
     </script>
 @endsection
+
+@include('activites._modal_create')
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        // Initialiser Select2 sur les dropdowns de la modale une fois qu'elle est chargée
+        $('#createActivityModal').on('shown.bs.modal', function () {
+            $('.select2-enable', this).select2({
+                dropdownParent: $('#createActivityModal'), // Important pour les modales
+                placeholder: 'Sélectionner...',
+                allowClear: true
+            });
+        });
+    });
+</script>
+@endpush
 
 @push('scripts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/simplebar/5.3.6/simplebar.min.js"></script>

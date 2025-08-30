@@ -11,22 +11,14 @@
             </ul>
         </div>
         <div class="page-btn">
-            @if(Auth::user()->role === 'admin' || Auth::user()->role === 'architecte')
-                @if($responsables->isEmpty())
-                    <div class="d-flex flex-column align-items-end">
-                        <button type="button" class="btn btn-added" disabled>
-                            <img src="{{ asset('template_assets/img/icons/plus.svg') }}" alt="img" class="me-1">
-                            Nouvelle Étude
-                        </button>
-                        <small class="text-danger mt-1">Aucun architecte disponible pour assignation.</small>
-                    </div>
-                @else
+            @can('activites.create')
+                
                     <button type="button" class="btn btn-added" data-bs-toggle="modal" data-bs-target="#createActivityModal" data-activity-type="etude">
                         <img src="{{ asset('template_assets/img/icons/plus.svg') }}" alt="img" class="me-1">
                         Nouvelle Étude
                     </button>
-                @endif
-            @endif
+                
+            @endcan
         </div>
     </div>
 
@@ -129,9 +121,12 @@
                                                 <a href="{{ route('activites.show', $etude) }}" class="btn btn-outline-info btn-sm" title="Voir les détails">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
+                                                @can('activites.edit')
                                                 <a href="{{ route('activites.edit', $etude) }}" class="btn btn-outline-warning btn-sm" title="Modifier">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
+                                                @endcan
+                                                @can('activites.delete')
                                                 <form action="{{ route('activites.destroy', $etude) }}" method="POST" class="d-inline delete-form">
                                                     @csrf
                                                     @method('DELETE')
@@ -139,6 +134,7 @@
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>
+                                                @endcan
                                             </div>
                                         </div>
                                     </div>
@@ -259,112 +255,5 @@
 
 @include('activites._modal_create')
 
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const createActivityModal = document.getElementById('createActivityModal');
-        const createActivityForm = document.getElementById('createActivityForm');
-        const modal = new bootstrap.Modal(createActivityModal);
 
-        // Personnaliser et pré-remplir la modale à l'ouverture
-        createActivityModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const activityType = button.getAttribute('data-activity-type');
-            
-            const typeInput = createActivityModal.querySelector('#activityType');
-            const titleSpan = createActivityModal.querySelector('#createActivityModalLabel'); // Corrected ID
-            
-            typeInput.value = activityType;
-            titleSpan.textContent = activityType.charAt(0).toUpperCase() + activityType.slice(1);
-        });
-
-        // Gérer la soumission du formulaire en AJAX
-        createActivityForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const formData = new FormData(this);
-            const action = this.getAttribute('action');
-
-            // Nettoyer les erreurs précédentes
-            document.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = '');
-            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
-
-            fetch(action, {
-                method: 'POST',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': formData.get('_token')
-                },
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(err => { throw err; });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    modal.hide();
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Succès !',
-                        text: data.message,
-                        showConfirmButton: false,
-                        timer: 1500,
-                        customClass: {
-                            popup: 'gemini-swal-popup'
-                        }
-                    }).then(() => {
-                        location.reload();
-                    });
-                }
-            })
-            .catch(response => {
-                // Try to parse the response as JSON for validation errors first
-                response.json().then(errorData => {
-                    if (errorData.errors) {
-                        // Afficher les nouvelles erreurs de validation
-                        for (const field in errorData.errors) {
-                            const input = document.querySelector(`[name="${field}"]`);
-                            if (input) {
-                                input.classList.add('is-invalid');
-                                let errorContainer = input.closest('.form-group').querySelector('.invalid-feedback');
-                                if (!errorContainer) {
-                                    errorContainer = document.createElement('div');
-                                    errorContainer.className = 'invalid-feedback';
-                                    input.parentNode.appendChild(errorContainer);
-                                }
-                                errorContainer.textContent = errorData.errors[field][0];
-                            }
-                        }
-                    } else {
-                         // If it's JSON but not a validation error, show generic error
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Erreur !',
-                            text: 'Une erreur inattendue est survenue.',
-                        });
-                    }
-                }).catch(() => {
-                    // If parsing as JSON fails, it's likely HTML. Log it as text.
-                    response.text().then(text => {
-                        console.error('Server returned non-JSON response:', text);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Erreur Serveur',
-                            text: 'Le serveur a retourné une réponse inattendue. Vérifiez la console du navigateur pour les détails.',
-                        });
-                    });
-                });
-            });
-        });
-
-        // Si le formulaire a des erreurs de validation (fallback non-AJAX), rouvrir la modale
-        @if($errors->any())
-            modal.show();
-        @endif
-    });
-</script>
-@endpush
 
